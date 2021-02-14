@@ -95,3 +95,17 @@ class MonitoringDB:
             self.cursor.execute("INSERT INTO submissions VALUES (?, ?, ?, ?, ?, ?, ?)",
                                 (sub.id, sub.author, sub.created_utc, sub.name, sub.permalink,
                                  sub.selftext, sub.title))
+
+    def get_stats_by_id_timestamp(self, submission_id: str, timestamp_utc: int):
+        self.cursor.execute("SELECT * FROM stats where submission_id = ? AND time_utc = ?",
+                            (submission_id, timestamp_utc))
+        if db_response := self.cursor.fetchone():
+            return SubmissionTemporalData(*db_response)
+        else:
+            return None
+
+    def insert_stats(self, stats: SubmissionTemporalData) -> None:
+        if self.get_stats_by_id_timestamp(stats.submission_id, stats.time_utc) is None:
+            self.cursor.execute("INSERT INTO stats VALUES (?, ?, ?, ?, ?)",
+                                (stats.submission_id, stats.time_utc, stats.ups,
+                                 stats.downs, stats.num_comments))

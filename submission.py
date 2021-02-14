@@ -33,7 +33,7 @@ class SubmissionMeta:
 
 @dataclass
 class SubmissionTemporalData:
-    id: str
+    submission_id: str
     time_utc: int
     ups: int
     downs: int
@@ -42,7 +42,7 @@ class SubmissionTemporalData:
     @classmethod
     def from_submission(cls, sub: praw.reddit.Submission, time: int):
         return cls(
-            id=sub.id,
+            submission_id=sub.id,
             time_utc=time,
             ups=int(sub.ups),
             downs=int(sub.downs),
