@@ -57,7 +57,7 @@ def create_client(client_id: str, client_secret: str):
     return praw.Reddit(
         client_id=client_id,
         client_secret=client_secret,
-        user_agent='linux:ypKsdDPvUAeMKw:v0.1.0 (by /u/_amas_)'
+        user_agent=f'linux:{client_id}:v0.1.0 (by /u/_amas_)'
     )
 
 
