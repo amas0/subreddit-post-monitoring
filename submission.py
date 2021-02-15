@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import praw
 
 
-@dataclass
+@dataclass(frozen=True)
 class SubmissionMeta:
     id: str
     author: str
@@ -31,7 +31,7 @@ class SubmissionMeta:
         pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class SubmissionTemporalData:
     submission_id: str
     time_utc: int
