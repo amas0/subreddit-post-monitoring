@@ -64,7 +64,7 @@ def get_new_submissions(subreddit: str, client: praw.Reddit,
     return metas, temporal_data
 
 
-def get_temp_data_from_id(submission_id: str, client: praw.Reddit) -> SubmissionStats:
+def get_submission_stats_from_id(submission_id: str, client: praw.Reddit) -> SubmissionStats:
     sub = client.submission(submission_id)
     time_utc = int(time.time())
     return SubmissionStats.from_submission(sub, time_utc)
