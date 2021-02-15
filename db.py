@@ -42,8 +42,8 @@ SUBMISSION_TABLE = DBTable(name='submissions', schema=[
 STATS_TABLE = DBTable(name='stats', schema=[
     DBColumn(name='submission_id', type='TEXT', options='NOT NULL'),
     DBColumn(name='time_utc', type='INTEGER', options='NOT NULL'),
-    DBColumn(name='ups', type='INTEGER', options='NOT NULL'),
-    DBColumn(name='downs', type='INTEGER', options='NOT NULL'),
+    DBColumn(name='score', type='INTEGER', options='NOT NULL'),
+    DBColumn(name='upvote_ratio', type='REAL', options='NOT NULL'),
     DBColumn(name='num_comments', type='INTEGER', options='NOT NULL'),
 ], options='PRIMARY KEY (submission_id, time_utc)')
 
@@ -107,8 +107,8 @@ class MonitoringDB:
     def insert_stats(self, stats: SubmissionStats) -> None:
         if self.get_stats_by_id_timestamp(stats.submission_id, stats.time_utc) is None:
             self.cursor.execute("INSERT INTO stats VALUES (?, ?, ?, ?, ?)",
-                                (stats.submission_id, stats.time_utc, stats.ups,
-                                 stats.downs, stats.num_comments))
+                                (stats.submission_id, stats.time_utc, stats.score,
+                                 stats.upvote_ratio, stats.num_comments))
 
     def get_recent_submissions(self, start_time_utc: int) -> list[Submission]:
         self.cursor.execute("SELECT * FROM submissions WHERE created_utc >= ?",

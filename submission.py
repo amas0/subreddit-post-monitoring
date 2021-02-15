@@ -31,8 +31,8 @@ class Submission:
 class SubmissionStats:
     submission_id: str
     time_utc: int
-    ups: int
-    downs: int
+    score: int
+    upvote_ratio: int
     num_comments: int
 
     @classmethod
@@ -40,8 +40,8 @@ class SubmissionStats:
         return cls(
             submission_id=sub.id,
             time_utc=time_utc,
-            ups=int(sub.ups),
-            downs=int(sub.downs),
+            score=int(sub.score),
+            upvote_ratio=sub.upvote_ratio,
             num_comments=int(sub.num_comments)
         )
 
