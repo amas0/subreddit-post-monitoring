@@ -1,0 +1,8 @@
+[Unit]
+Description=Periodically run the subreddit monitor
+
+[Timer]
+OnCalendar=*:0/10:0
+
+[Install]
+WantedBy=multi-user.target

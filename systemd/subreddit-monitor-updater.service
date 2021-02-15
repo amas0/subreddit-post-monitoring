@@ -1,0 +1,13 @@
+[Unit]
+Description=Periodically pull subreddit post data
+
+[Service]
+Type=simple
+Environment="REDDIT_CLIENT_ID="
+Environment="REDDIT_CLIENT_SECRET="
+Environment="MONITORING_DB_PATH="
+User=
+ExecStart=
+
+[Install]
+WantedBy=multi-user.target
