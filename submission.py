@@ -5,7 +5,7 @@ import praw
 
 
 @dataclass(frozen=True)
-class SubmissionMeta:
+class Submission:
     id: str
     author: str
     created_utc: int
@@ -28,7 +28,7 @@ class SubmissionMeta:
 
 
 @dataclass(frozen=True)
-class SubmissionTemporalData:
+class SubmissionStats:
     submission_id: str
     time_utc: int
     ups: int
@@ -55,16 +55,16 @@ def create_client(client_id: str, client_secret: str):
 
 
 def get_new_submissions(subreddit: str, client: praw.Reddit,
-                        limit: int = 10) -> tuple[list[SubmissionMeta], list[SubmissionTemporalData]]:
+                        limit: int = 10) -> tuple[list[Submission], list[SubmissionStats]]:
     metas, temporal_data = [], []
     for sub in client.subreddit(subreddit).new(limit=limit):
         time_utc = int(time.time())
-        metas.append(SubmissionMeta.from_submission(sub))
-        temporal_data.append(SubmissionTemporalData.from_submission(sub, time_utc))
+        metas.append(Submission.from_submission(sub))
+        temporal_data.append(SubmissionStats.from_submission(sub, time_utc))
     return metas, temporal_data
 
 
-def get_temp_data_from_id(submission_id: str, client: praw.Reddit) -> SubmissionTemporalData:
+def get_temp_data_from_id(submission_id: str, client: praw.Reddit) -> SubmissionStats:
     sub = client.submission(submission_id)
     time_utc = int(time.time())
-    return SubmissionTemporalData.from_submission(sub, time_utc)
+    return SubmissionStats.from_submission(sub, time_utc)

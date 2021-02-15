@@ -2,7 +2,7 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-from submission import SubmissionMeta, SubmissionTemporalData
+from submission import Submission, SubmissionStats
 
 
 @dataclass(frozen=True)
@@ -86,11 +86,11 @@ class MonitoringDB:
         self.cursor.execute("SELECT * FROM submissions where id = ?",
                             (submission_id,))
         if db_response := self.cursor.fetchone():
-            return SubmissionMeta(*db_response)
+            return Submission(*db_response)
         else:
             return None
 
-    def insert_submission(self, sub: SubmissionMeta) -> None:
+    def insert_submission(self, sub: Submission) -> None:
         if self.get_submission_by_id(sub.id) is None:
             self.cursor.execute("INSERT INTO submissions VALUES (?, ?, ?, ?, ?, ?, ?)",
                                 (sub.id, sub.author, sub.created_utc, sub.name, sub.permalink,
@@ -100,20 +100,20 @@ class MonitoringDB:
         self.cursor.execute("SELECT * FROM stats where submission_id = ? AND time_utc = ?",
                             (submission_id, timestamp_utc))
         if db_response := self.cursor.fetchone():
-            return SubmissionTemporalData(*db_response)
+            return SubmissionStats(*db_response)
         else:
             return None
 
-    def insert_stats(self, stats: SubmissionTemporalData) -> None:
+    def insert_stats(self, stats: SubmissionStats) -> None:
         if self.get_stats_by_id_timestamp(stats.submission_id, stats.time_utc) is None:
             self.cursor.execute("INSERT INTO stats VALUES (?, ?, ?, ?, ?)",
                                 (stats.submission_id, stats.time_utc, stats.ups,
                                  stats.downs, stats.num_comments))
 
-    def get_recent_submissions(self, start_time_utc: int) -> list[SubmissionMeta]:
+    def get_recent_submissions(self, start_time_utc: int) -> list[Submission]:
         self.cursor.execute("SELECT * FROM submissions WHERE created_utc >= ?",
                             (start_time_utc,))
         if db_response := self.cursor.fetchall():
-            return [SubmissionMeta(*row) for row in db_response]
+            return [Submission(*row) for row in db_response]
         else:
             return []
