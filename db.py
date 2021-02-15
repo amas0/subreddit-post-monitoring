@@ -109,3 +109,11 @@ class MonitoringDB:
             self.cursor.execute("INSERT INTO stats VALUES (?, ?, ?, ?, ?)",
                                 (stats.submission_id, stats.time_utc, stats.ups,
                                  stats.downs, stats.num_comments))
+
+    def get_recent_submissions(self, start_time_utc: int) -> list[SubmissionMeta]:
+        self.cursor.execute("SELECT * FROM submissions WHERE created_utc >= ?",
+                            (start_time_utc,))
+        if db_response := self.cursor.fetchall():
+            return [SubmissionMeta(*row) for row in db_response]
+        else:
+            return []

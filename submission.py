@@ -1,6 +1,6 @@
 import sqlite3
+import time
 from dataclasses import dataclass
-from datetime import datetime
 
 import praw
 
@@ -65,7 +65,7 @@ def get_new_submissions(subreddit: str, client: praw.Reddit,
                         limit: int = 10) -> tuple[list[SubmissionMeta], list[SubmissionTemporalData]]:
     metas, temporal_data = [], []
     for sub in client.subreddit(subreddit).new(limit=limit):
-        time_utc = int(datetime.utcnow().timestamp())
+        time_utc = int(time.time())
         metas.append(SubmissionMeta.from_submission(sub))
         temporal_data.append(SubmissionTemporalData.from_submission(sub, time_utc))
     return metas, temporal_data
@@ -73,5 +73,5 @@ def get_new_submissions(subreddit: str, client: praw.Reddit,
 
 def get_temp_data_from_id(submission_id: str, client: praw.Reddit) -> SubmissionTemporalData:
     sub = client.submission(submission_id)
-    time_utc = int(datetime.utcnow().timestamp())
+    time_utc = int(time.time())
     return SubmissionTemporalData.from_submission(sub, time_utc)
