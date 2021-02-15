@@ -1,4 +1,3 @@
-import sqlite3
 import time
 from dataclasses import dataclass
 
@@ -27,9 +26,6 @@ class SubmissionMeta:
             title=sub.title
         )
 
-    def write_to_table(self, sqlite: sqlite3.Cursor):
-        pass
-
 
 @dataclass(frozen=True)
 class SubmissionTemporalData:
@@ -40,17 +36,14 @@ class SubmissionTemporalData:
     num_comments: int
 
     @classmethod
-    def from_submission(cls, sub: praw.reddit.Submission, time: int):
+    def from_submission(cls, sub: praw.reddit.Submission, time_utc: int):
         return cls(
             submission_id=sub.id,
-            time_utc=time,
+            time_utc=time_utc,
             ups=int(sub.ups),
             downs=int(sub.downs),
             num_comments=int(sub.num_comments)
         )
-
-    def write_to_table(self, sqlite: sqlite3.Cursor):
-        pass
 
 
 def create_client(client_id: str, client_secret: str):
